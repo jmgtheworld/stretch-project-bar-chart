@@ -15,11 +15,12 @@ let options = {
   }
 }
 
-let count = {};
+
 
 const chartData = function (sortedData, options) {
   // count object to sort data entries and count them
-
+  let count = {};
+  
   for (let i = 0; i < sortedData.length; i++) {
   // If data already exists in the count object, add 1
     if ( count[sortedData[i]] ) {
