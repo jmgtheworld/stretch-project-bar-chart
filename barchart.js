@@ -1,4 +1,12 @@
-let data = [1,1,2,2,3,4,4,4,2,2];
+let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5]; 
+/* {
+  1: 2,
+  2: 4,
+  3: 2,
+  4: 5,
+  5: 1
+}
+*/
 let sortedData = data.sort(function(a,b){return a-b});
 
 let options = {
@@ -50,24 +58,57 @@ const drawBarChart = function(data, options, element){
   $(document.getElementById(element)).width(options['chartWidth']);
   $(document.getElementById(element)).height(options['chartHeight']);
 
-  $(document.getElementById(element)).append
-  for(let i = 0; i < options['xAxis'].length; i++) {
+  let sortedYData = options['yAxis'].sort(function(a,b){return b-a});
+
+  let yTicks = [];
+  yTicks.push(sortedYData[0]);
+  for (let i = 1; i < sortedYData.length; i++) {
+    if (sortedYData[i] < yTicks[yTicks.length-1]){
+      yTicks.push(sortedYData[i]);
+    }
+  }
+  
+  for (let i = yTicks.length + 1; i >= 1; i--) {
     $(document.getElementById(element))
-      .append('<span></span>' + "<span>" + options['xAxis'][i] + "</span>")
+    .append('<span class = y>' + i + '</span>')
   }
 
-$('span:even').css('margin', options['barSpacing']);
-
-$('span').css({
-  color: 'red',
-  fontFamily: 'sans-seriff',
-  fontSize: '20px',
-});
-
-$(document.getElementById(element)).css('border', 'dotted');
-
-
+  for(let i = 0; i < options['xAxis'].length; i++) {
+    $(document.getElementById(element))
+      .append('<span class = space></span>' + "<span class = x>" + options['xAxis'][i] + "</span>")
+  }
   
+  //x label properties
+  $('.x').css({
+    marginLeft: options['barSpacing'],
+    marginTop: '20%',
+    color: 'red',
+  });
+
+  $('.y').css({
+    clear: 'both',
+    height: options['chartHeight'] / (yTicks.length + 1),
+    borderStyle: 'solid none none none'
+  })
+
+  //Css properties for labels
+  $('span').css({
+    fontFamily: 'sans-seriff',
+    fontSize: '20px',
+    display: 'block',
+    float: 'left',
+  });
+
+  $(document.getElementById(element)).css({
+    borderStyle: 'none none solid solid',
+    marginLeft: '20px',
+    display: 'block',
+    float: 'left'
+  });
+
+
+
+
 }
 
 
