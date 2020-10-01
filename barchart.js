@@ -1,18 +1,18 @@
-let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5]; 
+let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10]; 
 /* {
   1: 2,
   2: 4,
   3: 2,
   4: 5,
-  5: 1
+  5: 1,
+  10: 1
 }
 */
-let sortedData = data.sort(function(a,b){return a-b});
 
 let options = {
   chartWidth: 500,
   chartHeight: 500,
-  barColour: '',
+  barColor: 'red',
   labelColour: '',
   barSpacing: 30,
   xAxis: [],
@@ -24,10 +24,12 @@ let options = {
   }
 }
 
-const chartData = function (sortedData, options) {
-  // count object to sort data entries and count them
-  let count = {};
+// count object to sort data entries and count them
+let count = {};
+let sortedData = data.sort(function(a,b){return a-b});
 
+// return object containing a set of unique numbers and how many there are in the dataset
+const chartData = function (sortedData, options) {
   for (let i = 0; i < sortedData.length; i++) {
   // If data already exists in the count object, add 1
     if ( count[sortedData[i]] ) {
@@ -36,11 +38,11 @@ const chartData = function (sortedData, options) {
     // if not, add the new data to the count object with an initial count of 1
     else {
       count[sortedData[i]] = 1;
-      options['xAxis'].push(sortedData[i]); // Determine x-axis ticks
+      options['xAxis'].push(sortedData[i]); // Determine x-axis 
     }
   }
 
-  // Determine y-axis ticks
+  // store y values in an array
   for (let i = 0; i < options['xAxis'].length ; i++) {
     options['yAxis'].push( count[options['xAxis'][i]] );
   }
@@ -48,68 +50,62 @@ const chartData = function (sortedData, options) {
   return count;
 }
 
-// render graph into this variable 
+// render graph into this variable identified in the DOM
 let element = 'chart';
 
-// Update x-axis, y-axis ticks 
+// store count object in a variable
 let barchartData = chartData(sortedData, options);
 
-const drawBarChart = function(data, options, element){
-  $(document.getElementById(element)).width(options['chartWidth']);
-  $(document.getElementById(element)).height(options['chartHeight']);
-
-  let sortedYData = options['yAxis'].sort(function(a,b){return b-a});
-
-  let yTicks = [];
-  yTicks.push(sortedYData[0]);
-  for (let i = 1; i < sortedYData.length; i++) {
-    if (sortedYData[i] < yTicks[yTicks.length-1]){
-      yTicks.push(sortedYData[i]);
+const drawEmptyChart = function (options, barchartData, element) {
+  for (let i = 0; i < options['xAxis'].length; i++ ) {
+    for (let i = 0; i < options['yAxis'].length; i++ ) {
+      $(document.getElementById(element)).append('<span class = space> </span>')
+      $(document.getElementById(element)).append('<span class = element> </span>')
     }
+    $(document.getElementsByClassName('element')).last().after('<span class = break>  </span>')
   }
-  
-  for (let i = yTicks.length + 1; i >= 1; i--) {
-    $(document.getElementById(element))
-    .append('<span class = y>' + i + '</span>')
-  }
-
-  for(let i = 0; i < options['xAxis'].length; i++) {
-    $(document.getElementById(element))
-      .append('<span class = space></span>' + "<span class = x>" + options['xAxis'][i] + "</span>")
-  }
-  
-  //x label properties
-  $('.x').css({
-    marginLeft: options['barSpacing'],
-    marginTop: '20%',
-    color: 'red',
-  });
-
-  $('.y').css({
-    clear: 'both',
-    height: options['chartHeight'] / (yTicks.length + 1),
-    borderStyle: 'solid none none none'
-  })
-
-  //Css properties for labels
-  $('span').css({
-    fontFamily: 'sans-seriff',
-    fontSize: '20px',
-    display: 'block',
-    float: 'left',
-  });
-
-  $(document.getElementById(element)).css({
-    borderStyle: 'none none solid solid',
-    marginLeft: '20px',
-    display: 'block',
-    float: 'left'
-  });
-
-
-
-
 }
 
 
+drawEmptyChart(options, barchartData, element);
+ 
+const drawBarChart = function(data, options, element){
+ 
+}
+
+$('#'+element).css({
+  marginLeft: '20',
+  width: options['chartWidth'],
+  height: options['chartHeight'],
+  borderStyle: 'none none solid solid',
+
+})
+
+$('.element').css({
+  display: 'inline-block',
+  width : (options['chartWidth'] - options['barSpacing']*(options['xAxis'].length) - 15)/ options['xAxis'].length ,
+  height : options['chartHeight'] / options['yAxis'].length ,
+  backgroundColor: 'red',
+});
+
+$('.space').css({
+  display: 'inline-block',
+  width : options['barSpacing'],
+  height : options['chartHeight'] / options['yAxis'].length ,
+});
+
+
+$('.break').css({
+  display: 'inline-block',
+  clear: 'both',
+
+});
+
+
+
+
+
+
+
+console.log(options['yAxis'])
 
