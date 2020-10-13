@@ -54,52 +54,59 @@ const chartData = function (sortedData, options) {
 let element = 'chart';
 
 // store count object in a variable
-let barchartData = chartData(sortedData, options);
+let barchartData = chartData(sortedData, options); 
+
 
 const drawEmptyChart = function (options, barchartData, element) {
+
   for (let i = 0; i < options['xAxis'].length; i++ ) {
-    for (let i = 0; i < options['yAxis'].length; i++ ) {
-      $(document.getElementById(element)).append('<span class = space> </span>')
-      $(document.getElementById(element)).append('<span class = element> </span>')
-    }
-    $(document.getElementsByClassName('element')).last().after('<span class = break>  </span>')
+    $(document.getElementById(element))
+    .append('<div id = space' + i + '> </div>')
+    .append('<div id = x' + i + '> </div>')
+
+    $('#x'+i ).css({
+      width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 20) /  options['xAxis'].length,
+      height: options['chartHeight'] ,
+      backgroundColor: 'red',
+      display: 'inline-block'
+    });
+
+    $('#space'+i ).css({
+      width: options['barSpacing'] ,
+      height: options['chartHeight'] ,
+      display: 'inline-block'
+    });
+
   }
-}
+
+  $('#'+element).css({
+    marginLeft: '20',
+    width: options['chartWidth'],
+    height: options['chartHeight'],
+    borderStyle: 'none none solid solid',
+  });
+
+
+
+
+} 
+
+
 
 
 drawEmptyChart(options, barchartData, element);
  
 const drawBarChart = function(data, options, element){
- 
+
+  for (let j = 0; j < count[options['xAxis'][i]]; j++) { 
+    $(document.getElementById()).append('<span id = space> </span>')
+    $(document.getElementById()).append('<span class= bar> </span>')
+    $(document.getElementById()).append('<span class = break> </span>')
+  }
+
 }
 
-$('#'+element).css({
-  marginLeft: '20',
-  width: options['chartWidth'],
-  height: options['chartHeight'],
-  borderStyle: 'none none solid solid',
 
-})
-
-$('.element').css({
-  display: 'inline-block',
-  width : (options['chartWidth'] - options['barSpacing']*(options['xAxis'].length) - 15)/ options['xAxis'].length ,
-  height : options['chartHeight'] / options['yAxis'].length ,
-  backgroundColor: 'red',
-});
-
-$('.space').css({
-  display: 'inline-block',
-  width : options['barSpacing'],
-  height : options['chartHeight'] / options['yAxis'].length ,
-});
-
-
-$('.break').css({
-  display: 'inline-block',
-  clear: 'both',
-
-});
 
 
 
