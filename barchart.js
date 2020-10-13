@@ -65,8 +65,8 @@ const drawEmptyChart = function (options, barchartData, element) {
     .append('<div id = x' + i + '> </div>')
 
     $('#x'+i ).css({
-      width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 20) /  options['xAxis'].length,
-      height: options['chartHeight'] ,
+      width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 30) /  options['xAxis'].length,
+      height: (options['chartHeight'] / options['yAxis'].length) * options['yAxis'][i] ,
       backgroundColor: 'red',
       display: 'inline-block'
     });
@@ -87,15 +87,11 @@ const drawEmptyChart = function (options, barchartData, element) {
   });
 
 
-
-
 } 
 
-
-
-
 drawEmptyChart(options, barchartData, element);
- 
+
+
 const drawBarChart = function(data, options, element){
 
   for (let j = 0; j < count[options['xAxis'][i]]; j++) { 
