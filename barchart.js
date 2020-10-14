@@ -1,4 +1,4 @@
-let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10]; 
+let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10,4,4,4,4]; 
 /* {
   1: 2,
   2: 4,
@@ -28,6 +28,8 @@ let options = {
 let count = {};
 let sortedData = data.sort(function(a,b){return a-b});
 
+let maxY = 0;
+
 // return object containing a set of unique numbers and how many there are in the dataset
 const chartData = function (sortedData, options) {
   for (let i = 0; i < sortedData.length; i++) {
@@ -47,6 +49,15 @@ const chartData = function (sortedData, options) {
     options['yAxis'].push( count[options['xAxis'][i]] );
   }
 
+  // get the biggest number in the yAxis 
+
+  for (let i = 0; i < options['yAxis'].length; i++) {
+    if (options['yAxis'][i] > maxY ) {
+      maxY = options['yAxis'][i] 
+    }
+  }
+
+  
   return count;
 }
 
@@ -66,9 +77,10 @@ const drawEmptyChart = function (options, barchartData, element) {
 
     $('#x'+i ).css({
       width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 30) /  options['xAxis'].length,
-      height: (options['chartHeight'] / options['yAxis'].length) * options['yAxis'][i] ,
+      height: (options['chartHeight'] /  (maxY + 1) )  * options['yAxis'][i] ,
       backgroundColor: 'red',
-      display: 'inline-block'
+      display: 'inline-block',
+
     });
 
     $('#space'+i ).css({
@@ -92,23 +104,11 @@ const drawEmptyChart = function (options, barchartData, element) {
 drawEmptyChart(options, barchartData, element);
 
 
-const drawBarChart = function(data, options, element){
 
-  for (let j = 0; j < count[options['xAxis'][i]]; j++) { 
-    $(document.getElementById()).append('<span id = space> </span>')
-    $(document.getElementById()).append('<span class= bar> </span>')
-    $(document.getElementById()).append('<span class = break> </span>')
-  }
+console.log(sortedData)
 
-}
+console.log(maxY)
 
-
-
-
-
-
-
-
+console.log(count)
 
 console.log(options['yAxis'])
-
