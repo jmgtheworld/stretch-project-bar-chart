@@ -1,4 +1,4 @@
-let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10,4,4,4,4]; 
+let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10,4,4,4,4,3]; 
 /* {
   1: 2,
   2: 4,
@@ -21,7 +21,8 @@ let options = {
     title: '',
     fontSize: 10,
     fontColor: 'red'
-  }
+  },
+  valuePosition: 'top'
 }
 
 // count object to sort data entries and count them
@@ -49,8 +50,7 @@ const chartData = function (sortedData, options) {
     options['yAxis'].push( count[options['xAxis'][i]] );
   }
 
-  // get the biggest number in the yAxis 
-
+  // get the biggest number in the yAxis
   for (let i = 0; i < options['yAxis'].length; i++) {
     if (options['yAxis'][i] > maxY ) {
       maxY = options['yAxis'][i] 
@@ -74,16 +74,15 @@ const drawEmptyChart = function (options, barchartData, element) {
     $(document.getElementById(element))
     .append('<div id = space' + i + '> </div>')
     .append('<div id = x' + i + '> </div>')
-
+  
     $('#x'+i ).css({
       width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 30) /  options['xAxis'].length,
       height: (options['chartHeight'] /  (maxY + 1) )  * options['yAxis'][i] ,
       backgroundColor: 'red',
       display: 'inline-block',
-
     });
 
-    $('#space'+i ).css({
+    $('#space'+i).css({
       width: options['barSpacing'] ,
       height: options['chartHeight'] ,
       display: 'inline-block'
@@ -91,11 +90,67 @@ const drawEmptyChart = function (options, barchartData, element) {
 
   }
 
+  for (let i = 0; i < options['xAxis'].length; i++ ) {
+    $(document.getElementById(element))
+    .append('<div id = xSpace' + i  + '></div><div id = xAxis' + i  + '>' + options["xAxis"][i] + '</div>')
+ 
+    $('#xSpace'+i).css({
+      width: options['barSpacing'] + (1 / options['xAxis'].length)  ,
+      height: '25px',
+      display: 'inline-block',
+    });
+
+    $('#xAxis'+i ).css({
+      width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 30) /  options['xAxis'].length,
+      height: '25px' ,
+      display: 'inline-block',
+      textAlign: 'center',
+      fontFamily: 'sans-serif',
+      fontSize: '15px'
+    });
+  } 
+
+  for (let i = 0; i < options['yAxis'].length; i++ ) {
+    let position = 0;
+
+    if (options['valuePosition'] === 'top' 
+    || options['valuePosition']  === 'Top') {
+      position = (options['chartHeight'] / (maxY + 1) ) * options['yAxis'][i]
+    }
+    else if (options['valuePosition'] === 'Centre' 
+    || options['valuePosition']  === 'centre') {
+      position = (options['chartHeight'] /  (maxY + 1) )  * options['yAxis'][i] / 2 
+        - 15/2 // Need to take into account for value fontSize
+    }
+    else if (options['valuePosition'] === 'bottom' 
+    || options['valuePosition']  === 'Bottom') {
+      position = 0
+    }
+
+    $(document.getElementById(element)).append('</div><span id = value' + i + '>' + options["yAxis"][i] + '</span>')
+    $('#value'+i).css({
+      position: 'absolute',
+      left: ((options['barSpacing'] + (1 / options['xAxis'].length))*(i)) + 
+      ((options['chartWidth'] - (options['barSpacing'] *  
+      options['xAxis'].length) - 30) /  options['xAxis'].length) * (i+1),
+      textAlign: 'center',
+      bottom: 0 + position,
+      fontFamily: 'sans-serif',
+      fontSize: '15px',
+      fontWeight: 'bold'
+    });
+
+
+  }
+
   $('#'+element).css({
-    marginLeft: '20',
+    position: 'relative',
     width: options['chartWidth'],
     height: options['chartHeight'],
     borderStyle: 'none none solid solid',
+    borderWidth: '4px',
+    marginLeft: '40px'
+
   });
 
 
