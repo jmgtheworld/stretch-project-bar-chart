@@ -58,7 +58,6 @@ const chartData = function (sortedData, options) {
     }
   }
 
-  
   return count;
 }
 
@@ -70,7 +69,26 @@ let barchartData = chartData(sortedData, options);
 
 
 const drawEmptyChart = function (options, barchartData, element) {
+  
+  // add y divs needed for ticks
+  for (let i = 1; i <= maxY; i++){
+    $(document.getElementById(element))
+    .append('<span id = y' + i + '> </span>')
+    $('#y'+i ).css({
+      position: 'absolute',
+      bottom : (options['chartHeight'] /  (maxY + 1) ) * (i-1),
+      width: '12px',
+      height: (options['chartHeight'] / (maxY + 1) )  ,
+      display: 'block',
+    });
+  }
+  
+  // add ticks to yaxis for all applicable y values
+  for (let i = 1; i <= options['yAxis'].length; i++){
+    $('#y' + options['yAxis'][ (i-1) ]).css('borderStyle', 'solid none none none')
+  }
 
+  // add bars
   for (let i = 0; i < options['xAxis'].length; i++ ) {
     $(document.getElementById(element))
     .append('<div id = space' + i + '> </div>')
@@ -91,6 +109,7 @@ const drawEmptyChart = function (options, barchartData, element) {
 
   }
 
+  // add x-axis
   for (let i = 0; i < options['xAxis'].length; i++ ) {
     $(document.getElementById(element))
     .append('<div id = xSpace' + i  + '></div><div id = xAxis' + i  + '>' + options["xAxis"][i] + '</div>')
@@ -111,9 +130,11 @@ const drawEmptyChart = function (options, barchartData, element) {
     });
   } 
 
+  // add value that needs to be displayed and allow the position to be adjusted
   for (let i = 0; i < options['yAxis'].length; i++ ) {
     let position = 0;
 
+    // possible positions of value to be displayed on the bar chart
     if (options['valuePosition'] === 'top' 
     || options['valuePosition']  === 'Top') {
       position = (options['chartHeight'] / (maxY + 1) ) * options['yAxis'][i]
@@ -144,6 +165,7 @@ const drawEmptyChart = function (options, barchartData, element) {
 
   }
 
+  // css for the entire barchart
   $('#'+element).css({
     position: 'relative',
     width: options['chartWidth'],
@@ -154,11 +176,7 @@ const drawEmptyChart = function (options, barchartData, element) {
 
   });
 
-
 } 
-
-drawEmptyChart(options, barchartData, element);
-
 
 
 console.log(sortedData)
