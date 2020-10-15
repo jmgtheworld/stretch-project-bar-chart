@@ -31,10 +31,11 @@ let sortedData = data.sort(function(a,b){return a-b});
 
 let maxY = 0;
 
-// return object containing a set of unique numbers and how many there are in the dataset
+// function to calculate various info needed to graph barchart
 const chartData = function (sortedData, options) {
   for (let i = 0; i < sortedData.length; i++) {
-  // If data already exists in the count object, add 1
+  // return object containing a set of unique numbers and how many there are in the dataset
+  // if data already exists in the count object, add 1
     if ( count[sortedData[i]] ) {
       count[sortedData[i]] += 1; 
     }
