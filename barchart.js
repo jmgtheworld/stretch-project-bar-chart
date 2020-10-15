@@ -9,6 +9,9 @@ let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10,4,4,4,4,3];
 }
 */
 
+// render graph into this variable identified in the DOM
+let element = 'chart';
+
 let options = {
   chartWidth: 500,
   chartHeight: 500,
@@ -18,8 +21,8 @@ let options = {
   xAxis: [],
   yAxis: [],
   title: {
-    title: '',
-    fontSize: 10,
+    chartTitle: 'Example 1',
+    fontSize: '30',
     fontColor: 'red'
   },
   valuePosition: 'top'
@@ -27,22 +30,23 @@ let options = {
 
 // count object to sort data entries and count them
 let count = {};
-let sortedData = data.sort(function(a,b){return a-b});
+let maxY =0;
 
-let maxY = 0;
+data.sort(function(a,b){return a-b});
 
 // function to calculate various info needed to graph barchart
-const chartData = function (sortedData, options) {
-  for (let i = 0; i < sortedData.length; i++) {
+const chartData = function (data, options) {
+ 
+  for (let i = 0; i < data.length; i++) {
   // return object containing a set of unique numbers and how many there are in the dataset
   // if data already exists in the count object, add 1
-    if ( count[sortedData[i]] ) {
-      count[sortedData[i]] += 1; 
+    if ( count[data[i]] ) {
+      count[data[i]] += 1; 
     }
     // if not, add the new data to the count object with an initial count of 1
     else {
-      count[sortedData[i]] = 1;
-      options['xAxis'].push(sortedData[i]); // Determine x-axis 
+      count[data[i]] = 1;
+      options['xAxis'].push(data[i]); // Determine x-axis 
     }
   }
 
@@ -61,24 +65,33 @@ const chartData = function (sortedData, options) {
   return count;
 }
 
-// render graph into this variable identified in the DOM
-let element = 'chart';
-
 // store count object in a variable
-let barchartData = chartData(sortedData, options); 
+let barchartData = chartData(data, options); 
 
+const drawBarChart = function (options, data, element) {
 
-const drawEmptyChart = function (options, barchartData, element) {
-  
+  // add title
+  $(document.getElementById(element))
+    .append('<span id = title>'+ options['title']['chartTitle']+'</span>')
+    $('#title').css({
+      position: 'absolute',
+      left: options['chartWidth'] / 2 - document.getElementById('title').offsetWidth /2,
+      display: 'block',
+      fontFamily: 'sans-serif',
+      fontSize: options['title']['fontSize'],
+      color: options['title']['fontColor'],
+      textAlign: 'center',
+    });
+
   // add y divs needed for ticks
   for (let i = 1; i <= maxY; i++){
     $(document.getElementById(element))
     .append('<span id = y' + i + '> </span>')
     $('#y'+i ).css({
       position: 'absolute',
-      bottom : (options['chartHeight'] /  (maxY + 1) ) * (i-1),
+      bottom : (options['chartHeight'] / (maxY + options['title'].fontSize / 7) ) * (i-1),
       width: '12px',
-      height: (options['chartHeight'] / (maxY + 1) )  ,
+      height: (options['chartHeight'] / (maxY + options['title'].fontSize / 7) )  ,
       display: 'block',
     });
   }
@@ -90,15 +103,15 @@ const drawEmptyChart = function (options, barchartData, element) {
 
   // add bars
   for (let i = 0; i < options['xAxis'].length; i++ ) {
-    $(document.getElementById(element))
+    $(document.getElementById(element)) 
     .append('<div id = space' + i + '> </div>')
     .append('<div id = x' + i + '> </div>')
   
     $('#x'+i ).css({
       width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 30) /  options['xAxis'].length,
-      height: (options['chartHeight'] /  (maxY + 1) )  * options['yAxis'][i] ,
+      height: (options['chartHeight'] /  (maxY + options['title'].fontSize / 7))  * options['yAxis'][i] ,
       backgroundColor: 'red',
-      display: 'inline-block',
+      display: 'none',
     });
 
     $('#space'+i).css({
@@ -137,11 +150,11 @@ const drawEmptyChart = function (options, barchartData, element) {
     // possible positions of value to be displayed on the bar chart
     if (options['valuePosition'] === 'top' 
     || options['valuePosition']  === 'Top') {
-      position = (options['chartHeight'] / (maxY + 1) ) * options['yAxis'][i]
+      position = (options['chartHeight'] / (maxY + options['title'].fontSize / 7) ) * options['yAxis'][i]
     }
     else if (options['valuePosition'] === 'Centre' 
     || options['valuePosition']  === 'centre') {
-      position = (options['chartHeight'] /  (maxY + 1) )  * options['yAxis'][i] / 2 
+      position = (options['chartHeight'] /  (maxY + options['title'].fontSize / 7) )  * options['yAxis'][i] / 2 
         - 15/2 // Need to take into account for value fontSize
     }
     else if (options['valuePosition'] === 'bottom' 
@@ -152,6 +165,7 @@ const drawEmptyChart = function (options, barchartData, element) {
     $(document.getElementById(element)).append('</div><span id = value' + i + '>' + options["yAxis"][i] + '</span>')
     $('#value'+i).css({
       position: 'absolute',
+      display: 'none',
       left: ((options['barSpacing'] + (1 / options['xAxis'].length))*(i)) + 
       ((options['chartWidth'] - (options['barSpacing'] *  
       options['xAxis'].length) - 30) /  options['xAxis'].length) * (i+1),
@@ -159,7 +173,8 @@ const drawEmptyChart = function (options, barchartData, element) {
       bottom: 0 + position,
       fontFamily: 'sans-serif',
       fontSize: '15px',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+  
     });
 
 
@@ -172,17 +187,10 @@ const drawEmptyChart = function (options, barchartData, element) {
     height: options['chartHeight'],
     borderStyle: 'none none solid solid',
     borderWidth: '4px',
-    marginLeft: '40px'
+    marginLeft: '20px'
 
   });
 
 } 
 
 
-console.log(sortedData)
-
-console.log(maxY)
-
-console.log(count)
-
-console.log(options['yAxis'])
