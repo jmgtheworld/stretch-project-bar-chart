@@ -1,29 +1,21 @@
-let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10,4,4,4,4,3]; 
-/* {
-  1: 2,
-  2: 4,
-  3: 2,
-  4: 5,
-  5: 1,
-  10: 1
-}
-*/
+let data = [1,1,2,2,3,4,4,4,2,2,3,4,4,5,10,4,4,4,4,3,8,8,8,8,8]; 
 
 // render graph into this variable identified in the DOM
 let element = 'chart';
 
+// options to customize bar color, label color, bar spacing
 let options = {
   chartWidth: 500,
   chartHeight: 500,
   barColor: 'red',
-  labelColour: '',
+  labelColor: 'blue',
   barSpacing: 30,
   xAxis: [],
   yAxis: [],
   title: {
     chartTitle: 'Example 1',
     fontSize: '30',
-    fontColor: 'red'
+    fontColor: 'black'
   },
   valuePosition: 'top'
 }
@@ -75,7 +67,7 @@ const drawBarChart = function (options, data, element) {
     .append('<span id = title>'+ options['title']['chartTitle']+'</span>')
     $('#title').css({
       position: 'absolute',
-      left: options['chartWidth'] / 2 - document.getElementById('title').offsetWidth /2,
+      left: options['chartWidth'] / 2 - document.getElementById('title').offsetWidth / 2,
       display: 'block',
       fontFamily: 'sans-serif',
       fontSize: options['title']['fontSize'],
@@ -108,7 +100,9 @@ const drawBarChart = function (options, data, element) {
     .append('<div id = x' + i + '> </div>')
   
     $('#x'+i ).css({
-      width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 30) /  options['xAxis'].length,
+      width: (options['chartWidth'] - 
+      (options['barSpacing'] *  options['xAxis'].length) - 30 ) 
+      /  options['xAxis'].length,
       height: (options['chartHeight'] /  (maxY + options['title'].fontSize / 7))  * options['yAxis'][i] ,
       backgroundColor: 'red',
       display: 'none',
@@ -134,7 +128,9 @@ const drawBarChart = function (options, data, element) {
     });
 
     $('#xAxis'+i ).css({
-      width: (options['chartWidth'] - (options['barSpacing'] *  options['xAxis'].length) - 30) /  options['xAxis'].length,
+      width: (options['chartWidth'] - 
+      (options['barSpacing'] *  options['xAxis'].length) - 30) 
+      /  options['xAxis'].length,
       height: '25px' ,
       display: 'inline-block',
       textAlign: 'center',
@@ -150,12 +146,12 @@ const drawBarChart = function (options, data, element) {
     // possible positions of value to be displayed on the bar chart
     if (options['valuePosition'] === 'top' 
     || options['valuePosition']  === 'Top') {
-      position = (options['chartHeight'] / (maxY + options['title'].fontSize / 7) ) * options['yAxis'][i]
+      position = (options['chartHeight'] / (maxY + options['title'].fontSize / 8) ) * options['yAxis'][i]
     }
     else if (options['valuePosition'] === 'Centre' 
     || options['valuePosition']  === 'centre') {
       position = (options['chartHeight'] /  (maxY + options['title'].fontSize / 7) )  * options['yAxis'][i] / 2 
-        - 15/2 // Need to take into account for value fontSize
+        - 17/2 // Need to take into account for value fontSize
     }
     else if (options['valuePosition'] === 'bottom' 
     || options['valuePosition']  === 'Bottom') {
@@ -166,14 +162,21 @@ const drawBarChart = function (options, data, element) {
     $('#value'+i).css({
       position: 'absolute',
       display: 'none',
-      left: ((options['barSpacing'] + (1 / options['xAxis'].length))*(i)) + 
-      ((options['chartWidth'] - (options['barSpacing'] *  
-      options['xAxis'].length) - 30) /  options['xAxis'].length) * (i+1),
+      left: (options['barSpacing'] * (i+1) ) // add space width
+      +   (options['chartWidth'] - 
+      (options['barSpacing'] *  options['xAxis'].length) - 30 ) 
+      /  options['xAxis'].length * i // add bar width
+      + (options['chartWidth'] - 
+      (options['barSpacing'] *  options['xAxis'].length) - 30 ) 
+      /  options['xAxis'].length / 2 // add half of bar width
+      - 9.47 / 2 // account for width of span
+     ,
       textAlign: 'center',
       bottom: 0 + position,
       fontFamily: 'sans-serif',
-      fontSize: '15px',
+      fontSize: '17px',
       fontWeight: 'bold',
+      color: options['labelColor']
   
     });
 
